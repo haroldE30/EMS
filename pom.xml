@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.adeptsource</groupId>
-	<artifactId>hrms</artifactId>
+	<artifactId>ems</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>hrms</name>
-	<description>HR Management System</description>
+	<name>ems</name>
+	<description>Employee Management System</description>
 
 	<properties>
 		<java.version>1.8</java.version>
