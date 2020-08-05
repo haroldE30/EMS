@@ -44,22 +44,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 		try {
 			return employeeRepository.findAll();
 		} catch (Exception e) {
-			log.error("Failed to load list of employees. {}",  e);
-			throw new ResourceNotFoundException("Failed to load list of employees." + e);
+			log.error("Failed to load list of employees. {}",  e.getMessage());
+			throw new ResourceNotFoundException("Failed to load employees.", e);
 		}
 	}
-
+	
 	@Override
 	public Employee getById(Long id) throws ResourceNotFoundException {
 		try {
-		return employeeRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Employee not found for id: " + id));
+			return employeeRepository.findById(id)
+					.orElseThrow(() -> new ResourceNotFoundException("Employee not found for id: " + id));
 		} catch (Exception e) {
-			log.error("Employee not found for id: {}. {}", id, e.getLocalizedMessage());
+			log.error("Employee not found for id: {}. {}", id, e.getMessage());
 			throw e;
 		}
 	}
-
+	
 	@Override
 	public Employee create(EmployeeDTO params) throws TransactionProcessException {
 		Employee employee = new Employee();
@@ -86,7 +86,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			}
 			return employeeRepository.save(employee);
 		} catch (Exception e) {
-			log.error("Failed to create employee. {}", e.getLocalizedMessage());
+			log.error("Failed to create employee. {}", e.getMessage());
 			throw new TransactionProcessException("Failed to create employee. ", e);
 		}
 
@@ -126,8 +126,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			return employeeRepository.save(employee);
 		}catch (Exception e) {
-			log.error("Failed to update employee. {}", e.getLocalizedMessage());
-			throw new TransactionProcessException("Failed to update employee. ", e);
+			log.error("Failed to update employee. {}", e.getMessage());
+			throw new TransactionProcessException("Failed to update employee with id: " + id, e);
 		}
 	}
 
@@ -138,7 +138,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			employeeRepository.delete(employee);
 		}catch (Exception e) {
 			log.error("Failed to delete employee. {}", e.getMessage());
-			throw new TransactionProcessException("Failed to delete employee. ", e);
+			throw new TransactionProcessException("Failed to delete employee with id: " + id, e);
 		}
 	}
 

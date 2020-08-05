@@ -69,6 +69,10 @@ public class EmployeeDTO {
 	@NotNull
 	private Long positionId;
 	
+	private String positionTitle;
+	
 	@NotNull
 	private Long departmentId;
+	
+	private String departmentName;
 }

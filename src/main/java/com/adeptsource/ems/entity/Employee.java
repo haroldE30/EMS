@@ -17,10 +17,12 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.adeptsource.ems.enums.EmploymentStatus;
 import com.adeptsource.ems.enums.Gender;
 import com.adeptsource.ems.enums.MaritalStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -84,10 +86,12 @@ public class Employee implements Serializable {
 	
 	private String country;
 
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "position_id")
 	private Position position;
 
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "department_id")
 	private Department department;
@@ -100,6 +104,9 @@ public class Employee implements Serializable {
 	@Column(name = "updated_date")
 	private Date updatedDate;
 	
+	@Transient
+	private String fullName;
+	
 	@PrePersist
     public void prePersist() {
         createdDate = new Date();
@@ -110,4 +117,14 @@ public class Employee implements Serializable {
         updatedDate = new Date();
     }
 	
+    public String getFullName() {
+    	StringBuilder sb = new StringBuilder();
+    	return sb.append(this.lastName)
+    		.append(", ")
+    		.append(this.firstName)
+    		.append(" ")
+    		.append(this.middleName)
+    		.toString();
+    }
+    
 }

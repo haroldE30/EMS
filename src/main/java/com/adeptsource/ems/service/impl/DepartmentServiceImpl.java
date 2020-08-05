@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.adeptsource.ems.common.util.CopyUtil;
-import com.adeptsource.ems.dto.DepartmentDTO;
 import com.adeptsource.ems.entity.Department;
 import com.adeptsource.ems.exception.ResourceNotFoundException;
 import com.adeptsource.ems.exception.TransactionProcessException;
@@ -35,8 +34,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 		try {
 			return departmentRepository.findAll();
 		}catch(Exception e) {
-			log.error("Failed to load list of departments. {}", e.getLocalizedMessage());
-			throw new ResourceNotFoundException("Failed to load list of departments. ", e);
+			log.error("Failed to load list of departments. {}", e.getMessage());
+			throw new ResourceNotFoundException("Failed to load departments. ", e);
 		}
 	}
 
@@ -45,7 +44,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 		try {
 			return departmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Department not found for id: " + id));
 		} catch (Exception e) {
-			log.error("Department not found for id: {}. {}", id, e.getLocalizedMessage());
+			log.error("Department not found for id: {}. {}", id, e.getMessage());
 			throw e;
 		}
 	}
@@ -55,20 +54,20 @@ public class DepartmentServiceImpl implements DepartmentService {
 		try {
 			return departmentRepository.save(department);
 		} catch (Exception e) {
-			log.error("Failed to create department. {}", e.getLocalizedMessage());
+			log.error("Failed to create department. {}", e.getMessage());
 			throw new TransactionProcessException("Failed to create department. ", e);
 		}
 	}
 
 	@Override
-	public Department update(Long id, DepartmentDTO params) throws TransactionProcessException {
+	public Department update(Long id, Department params) throws TransactionProcessException {
 		try {
 			Department department = getById(id);
 			CopyUtil.copyNonNullProperties(params, department);
 			return departmentRepository.save(department);
 		} catch(Exception e) {
-			log.error("Failed to update department. {}", e.getLocalizedMessage());
-			throw new TransactionProcessException("Failed to update department. ", e);
+			log.error("Failed to update department. {}", e.getMessage());
+			throw new TransactionProcessException("Failed to update department with id: " + id, e);
 		}
 	}
 
@@ -78,8 +77,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 			Department department = getById(id);
 			departmentRepository.delete(department);
 		} catch(Exception e) {
-			log.error("Failed to delete department. {}", e.getLocalizedMessage());
-			throw new TransactionProcessException("Failed to delete department. " + e);
+			log.error("Failed to delete department. {}", e.getMessage());
+			throw new TransactionProcessException("Failed to delete department with id: " + id, e);
 		}
 	}
 

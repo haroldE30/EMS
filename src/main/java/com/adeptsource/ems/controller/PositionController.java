@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adeptsource.ems.common.bind.RequestDTO;
@@ -37,32 +37,34 @@ public class PositionController {
 	}
 	
 	@GetMapping("/positions")
+	@ResponseStatus(HttpStatus.OK)
 	public List<Position> getAll() throws ResourceNotFoundException{
 		return positionService.getAll();
 	}
 	
 	@GetMapping("/positions/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public ResponseDTO<PositionDTO> getPositionById(@PathVariable Long id) throws ResourceNotFoundException {
 		Position position = positionService.getById(id);
 		return ResponseDTO.ok().convertTo(position, PositionDTO.class);
 	}
 	
 	@PostMapping("/positions")
-	public ResponseDTO<PositionDTO> create(@RequestDTO(PositionDTO.class) @Validated Position params) throws TransactionProcessException{
-		Position position = positionService.create(params);
-		return ResponseDTO.accepted().convertTo(position, PositionDTO.class);
+	@ResponseStatus(HttpStatus.CREATED)
+	public void create(@RequestDTO(PositionDTO.class) @Validated Position params) throws TransactionProcessException{
+		positionService.create(params);
 	}
 	
 	@PutMapping("/positions/{id}")
-	public ResponseDTO<PositionDTO> update(@PathVariable Long id,
+	@ResponseStatus(HttpStatus.OK)
+	public void update(@PathVariable Long id,
 			@RequestBody @Validated PositionDTO params) throws TransactionProcessException {
-		Position position = positionService.update(id, params);
-		return ResponseDTO.ok().convertTo(position, PositionDTO.class);
+		positionService.update(id, params);
 	}
 	
 	@DeleteMapping("/positions/{id}")
-	public ResponseEntity<HttpStatus> delete(@PathVariable Long id) throws TransactionProcessException {
+	@ResponseStatus(HttpStatus.OK)
+	public void delete(@PathVariable Long id) throws TransactionProcessException {
 		positionService.delete(id);
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

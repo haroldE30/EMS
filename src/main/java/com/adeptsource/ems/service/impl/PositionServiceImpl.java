@@ -35,8 +35,8 @@ public class PositionServiceImpl implements PositionService {
 		try {
 			return positionRepository.findAll();
 		} catch (Exception e) {
-			log.error("Failed to load list of positions. {}", e.getLocalizedMessage());
-			throw new ResourceNotFoundException("Failed to load list of positions. ", e);
+			log.error("Failed to load list of positions. {}", e.getMessage());
+			throw new ResourceNotFoundException("Failed to load positions.", e);
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class PositionServiceImpl implements PositionService {
 		try {
 		return positionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Position not found for id: " + id));
 		} catch(Exception e) {
-			log.error("Position not found for id: {}. {}" + id, e.getLocalizedMessage());
+			log.error("Position not found for id: {}. {}" + id, e.getMessage());
 			throw e;
 		}
 	}
@@ -55,7 +55,7 @@ public class PositionServiceImpl implements PositionService {
 		try {
 			return positionRepository.save(position);
 		} catch (Exception e) {
-			log.error("Failed to create position. {}", e.getLocalizedMessage());
+			log.error("Failed to create position. {}", e.getMessage());
 			throw new TransactionProcessException("Failed to create position. ", e);
 		}
 	}
@@ -67,8 +67,8 @@ public class PositionServiceImpl implements PositionService {
 			CopyUtil.copyNonNullProperties(params, position);
 			return positionRepository.save(position);
 		} catch(Exception e) {
-			log.error("Failed to update position. {}", e.getLocalizedMessage());
-			throw new TransactionProcessException("Failed to update position. ", e);
+			log.error("Failed to update position. {}", e.getMessage());
+			throw new TransactionProcessException("Failed to update position with id: " + id, e);
 		}
 	}
 
@@ -78,8 +78,8 @@ public class PositionServiceImpl implements PositionService {
 			Position position = getById(id);
 			positionRepository.delete(position);
 		} catch(Exception e) {
-			log.error("Failed to delete position. {}", e.getLocalizedMessage());
-			throw new TransactionProcessException("Failed to delete position. ", e);
+			log.error("Failed to delete position. {}", e.getMessage());
+			throw new TransactionProcessException("Failed to delete position with id: " + id, e);
 		}
 	}
 

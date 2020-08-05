@@ -37,12 +37,14 @@ public class EmployeeProject {
 	private Employee member;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "emp_join_date")
-	private Date employeeJoinDate;
+	@Column(name = "join_date")
+	private Date joinDate;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "emp_left_date")
-	private Date employeeLeftDate;
+	@Column(name = "left_date")
+	private Date leftDate;
+	
+	private String remarks;
 	
 	private boolean active;
 	

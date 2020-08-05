@@ -4,15 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.adeptsource.ems.common.bind.RequestDTO;
@@ -37,32 +35,34 @@ public class DepartmentController {
 	}
 	
 	@GetMapping("/departments")
+	@ResponseStatus(HttpStatus.OK)
 	public List<Department> getAllDepartments() throws ResourceNotFoundException{
 		return departmentService.getAll();
 	}
 	
 	@GetMapping("/departments/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public ResponseDTO<DepartmentDTO> getDepartmentById(@PathVariable Long id) throws ResourceNotFoundException {
 		Department department = departmentService.getById(id);
 		return ResponseDTO.ok().convertTo(department, DepartmentDTO.class);
 	}
 	
 	@PostMapping("/departments")
-	public ResponseDTO<DepartmentDTO> createDepartment(@RequestDTO(DepartmentDTO.class) @Validated Department params) throws TransactionProcessException{
-		Department department = departmentService.create(params);
-		return ResponseDTO.ok().convertTo(department, DepartmentDTO.class);
+	@ResponseStatus(HttpStatus.CREATED)
+	public void createDepartment(@RequestDTO(DepartmentDTO.class) Department params) throws TransactionProcessException {
+		departmentService.create(params);
 	}
 	
 	@PutMapping("/departments/{id}")
-	public ResponseDTO<DepartmentDTO> updateDepartment(@PathVariable Long id,
-			@Validated @RequestBody DepartmentDTO params) throws TransactionProcessException{
-		Department department = departmentService.update(id, params);
-		return ResponseDTO.ok().convertTo(department, DepartmentDTO.class);
+	@ResponseStatus(HttpStatus.OK)
+	public void updateDepartment(@PathVariable Long id, @RequestDTO(DepartmentDTO.class) Department params) 
+			throws TransactionProcessException {
+		departmentService.update(id, params);
 	}
 	
 	@DeleteMapping("/departments/{id}")
-	public ResponseEntity<HttpStatus> deleteDepartment(@PathVariable Long id) throws TransactionProcessException{
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteDepartment(@PathVariable Long id) throws TransactionProcessException {
 		departmentService.delete(id);
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
